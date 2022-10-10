@@ -27,4 +27,6 @@ func main() {
 	// var variabile = 10
 	// esiste una definizione abbreviata che viene maggiormente usata:
 	// variabile := 10
+
+	// Per conoscere il tipo di una variabile bisogna usare fmt.Printf("Il tipo della variabile è: %T", variabile)
 }
