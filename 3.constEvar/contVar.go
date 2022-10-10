@@ -22,4 +22,9 @@ func main() {
 	fmt.Println("Il valore della prima var e' ", variabile1)
 	fmt.Println("Il valore della seconda var e' ", variabile2)
 	fmt.Println("Il valore della terza var e' ", variabile3)
+
+	// le varibili vengono di norma dichiarate così:
+	// var variabile = 10
+	// esiste una definizione abbreviata che viene maggiormente usata:
+	// variabile := 10
 }
