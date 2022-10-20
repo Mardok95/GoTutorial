@@ -33,6 +33,27 @@ func main() {
 
 }
 
+You can use switch with no statement and the meaning is switch true, so it's basically an if-then-else condition
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	t := time.Now()
+	switch {
+	case t.Hour() < 12:
+		fmt.Println("Good morning!")
+	case t.Hour() < 17:
+		fmt.Println("Good afternoon.")
+	default:
+		fmt.Println("Good evening.")
+	}
+}
+
+
 
 
 
