@@ -4,40 +4,53 @@ package main
 
 import (
 	"fmt"
-	"math/rand"
-	"time"
 )
 
-// SeedWithTime seeds math/rand with the current computer time.
-func SeedWithTime() {
-	rand.Seed(time.Now().UnixNano())
+// InterestRate returns the interest rate for the provided balance.
+func InterestRate(balance float64) float32 {
+	switch {
+	case balance < 0.0:
+		return float32(3.213)
+	case balance >= 0.0 && balance < 1000.0:
+		return float32(0.5)
+	case balance >= 1000.0 && balance < 5000.0:
+		return float32(1.621)
+	default:
+		return float32(2.475)
+	}
 }
 
-// RollADie returns a random int d with 1 <= d <= 20.
-func RollADie() int {
-	n := rand.Intn(20-1) + 1
-	return n
+// Interest calculates the interest for the provided balance.
+func Interest(balance float64) float64 {
+	interest := InterestRate(balance)
+	interest = float32(balance) * interest / 100
+	return float64(interest)
 }
 
-// GenerateWandEnergy returns a random float64 f with 0.0 <= f < 12.0.
-func GenerateWandEnergy() float64 {
-	m := 0.0 + rand.Float64()*(12.0-0.0)
-	return m
+// AnnualBalanceUpdate calculates the annual balance update, taking into account the interest rate.
+func AnnualBalanceUpdate(balance float64) float64 {
+	interest := Interest(balance)
+	result := interest + balance
+	return result
 }
 
-// ShuffleAnimals returns a slice with all eight animal strings in random order.
-func ShuffleAnimals() []string {
-	animal := []string{"ant", "beaver", "cat", "dog", "elephant", "fox", "giraffe", "hedgehog"}
-	rand.Shuffle(len(animal), func(i, j int) {
-		animal[i], animal[j] = animal[j], animal[i]
-	})
-	return animal
+// YearsBeforeDesiredBalance calculates the minimum number of years required to reach the desired balance.
+func YearsBeforeDesiredBalance(balance, targetBalance float64) int {
+	years := 0
+	for balance <= targetBalance {
+		balance = balance + Interest(balance)
+		years = years + 1
+	}
+	return years
 }
 
 func main() {
-	SeedWithTime()
-	fmt.Println(RollADie())
-	fmt.Println(GenerateWandEnergy())
-	fmt.Println(ShuffleAnimals())
+	fmt.Println(InterestRate(1000.0))
+	fmt.Println(Interest(200.75))
+	fmt.Println(AnnualBalanceUpdate(200.75))
+
+	balance := 200.75
+	targetBalance := 214.88
+	fmt.Println(YearsBeforeDesiredBalance(balance, targetBalance))
 
 }
