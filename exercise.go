@@ -6,51 +6,91 @@ import (
 	"fmt"
 )
 
-// InterestRate returns the interest rate for the provided balance.
-func InterestRate(balance float64) float32 {
-	switch {
-	case balance < 0.0:
-		return float32(3.213)
-	case balance >= 0.0 && balance < 1000.0:
-		return float32(0.5)
-	case balance >= 1000.0 && balance < 5000.0:
-		return float32(1.621)
-	default:
-		return float32(2.475)
+// Units stores the Gross Store unit measurements.
+func Units() map[string]int {
+	unit := map[string]int{}
+	unit["quarter_of_a_dozen"] = 3
+	unit["half_of_a_dozen"] = 6
+	unit["dozen"] = 12
+	unit["small_gross"] = 120
+	unit["gross"] = 144
+	unit["great_gross"] = 1728
+	return unit
+
+}
+
+// NewBill creates a new bill.
+func NewBill() map[string]int {
+	bill := map[string]int{}
+
+	return bill
+}
+
+// AddItem adds an item to customer bill.
+func AddItem(bill, units map[string]int, item, unit string) bool {
+	value, exists := units[unit]
+	if exists == false {
+		return false
 	}
+	firstValue := bill[item]
+	bill[item] = value + firstValue
+	return true
+
 }
 
-// Interest calculates the interest for the provided balance.
-func Interest(balance float64) float64 {
-	interest := InterestRate(balance)
-	interest = float32(balance) * interest / 100
-	return float64(interest)
-}
-
-// AnnualBalanceUpdate calculates the annual balance update, taking into account the interest rate.
-func AnnualBalanceUpdate(balance float64) float64 {
-	interest := Interest(balance)
-	result := interest + balance
-	return result
-}
-
-// YearsBeforeDesiredBalance calculates the minimum number of years required to reach the desired balance.
-func YearsBeforeDesiredBalance(balance, targetBalance float64) int {
-	years := 0
-	for balance <= targetBalance {
-		balance = balance + Interest(balance)
-		years = years + 1
+// RemoveItem removes an item from customer bill.
+func RemoveItem(bill, units map[string]int, item, unit string) bool {
+	value, exists := bill[item]
+	value1, exists1 := units[unit]
+	if exists == false || exists1 == false {
+		return false
 	}
-	return years
+	if value < 0 || value1 < 0 {
+		return false
+	}
+	if value == 0 {
+		delete(bill, item)
+		return true
+	}
+	firstValue := bill[item]
+	bill[item] = value + firstValue
+	return true
+
+}
+
+// GetItem returns the quantity of an item that the customer has in his/her bill.
+func GetItem(bill map[string]int, item string) (int, bool) {
+	value, exists := bill[item]
+	if exists == false {
+		return 0, false
+	} else {
+		return value, true
+	}
 }
 
 func main() {
-	fmt.Println(InterestRate(1000.0))
-	fmt.Println(Interest(200.75))
-	fmt.Println(AnnualBalanceUpdate(200.75))
+	//fmt.Println("Exercise")
+	units := Units()
+	fmt.Println(units)
 
-	balance := 200.75
-	targetBalance := 214.88
-	fmt.Println(YearsBeforeDesiredBalance(balance, targetBalance))
+	bill := NewBill()
+	fmt.Println(bill)
+
+	bill = NewBill()
+	units = Units()
+	ok := AddItem(bill, units, "carrot", "dozen")
+	fmt.Println(ok)
+
+	bill = NewBill()
+	units = Units()
+	ok = RemoveItem(bill, units, "carrot", "dozen")
+	fmt.Println(ok)
+
+	bill = map[string]int{"carrot": 12, "grapes": 3}
+	qty, ok1 := GetItem(bill, "carrot")
+	fmt.Println(qty)
+	// Output: 12
+	fmt.Println(ok1)
+	// Output: true
 
 }
